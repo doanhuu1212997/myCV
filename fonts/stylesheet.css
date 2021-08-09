@@ -1,0 +1,36 @@
+@font-face {
+    font-family: 'Like Father Like Son Two';
+    src: url('LikeFatherLikeSonTwo.woff2') format('woff2'),
+        url('LikeFatherLikeSonTwo.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Like Father Like Son Two';
+    src: url('LikeFatherLikeSonTwo.woff2') format('woff2'),
+        url('LikeFatherLikeSonTwo.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Like Father Like Son';
+    src: url('LikeFatherLikeSon.woff2') format('woff2'),
+        url('LikeFatherLikeSon.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Like Father Like Son';
+    src: url('LikeFatherLikeSon.woff2') format('woff2'),
+        url('LikeFatherLikeSon.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
