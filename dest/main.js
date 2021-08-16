@@ -239,8 +239,8 @@ $(document).ready(function () {
       TweenMax.set($('.section-group'), { zIndex: "" });
       $(".menu__deskop li").removeClass("active");
       $(".menu__deskop li").eq(i).addClass("active");
-      bodReset()
-      TweenMax.fromTo($('.section-group')[i], 1, { zIndex: 1 }, { y: '0%' })
+
+      TweenMax.fromTo($('.section-group')[i], 1, { zIndex: 1 }, { y: '0%', onComplete: bodReset() })
     };
     //Slide Down
     function bodSlideDown() {
@@ -249,8 +249,8 @@ $(document).ready(function () {
       TweenMax.set($('.section-group'), { zIndex: "" });
       $(".menu__deskop li").removeClass("active");
       $(".menu__deskop li").eq(i).addClass("active");
-      bodReset()
-      TweenMax.fromTo($('.section-group')[i], 1, { y: '-100%', zIndex: 1 }, { y: '0%' });
+
+      TweenMax.fromTo($('.section-group')[i], 1, { y: '-100%', zIndex: 1 }, { y: '0%', onComplete: bodReset() });
 
     };
 
@@ -378,21 +378,55 @@ $(document).ready(function () {
       }
 
     );
-    	//AutoSlide
-	var slideTimer;
-	function StartTimer(){
-		slideTimer = setInterval(function(){ beginSlide(); }, 10000);
-		function beginSlide(){
-			if ( i >= i - 1 ){
-				i = 0 ;
-			}else{
-				i++;
-			}
-			bodSlideUp();
-		};
-	}
+    //AutoSlide
+    var slideTimer;
+    function StartTimer() {
+      slideTimer = setInterval(function () { beginSlide(); }, 10000);
+      function beginSlide() {
+        if (i >= i - 1) {
+          i = 0;
+        } else {
+          i++;
+        }
+        bodSlideUp();
+      };
+    }
+    function CustomAnim(){
+      switch(i){
+        case 0:
+        $('.section-left').addClass("overflow");
+        TweenMax.staggerFromTo($(".feliz-top, .feliz-middle, .feliz-bottom, .feliz-divider"),0.5,{autoAlpha:0},{autoAlpha:1,delay:0.5,ease:Quad.easeOut},0.2);
+        TweenMax.to($(".symbol-home"), 0.5, {autoAlpha: 0});
+        TweenMax.to($(".symbol-home div"), 0.5, {autoAlpha: 0});
+        TweenMax.to($(".register-home"), 0.5, {autoAlpha: 1, delay: 0.5});
+        break;
+        
+        //case 2:
+        //TweenMax.to($(".symbol-home"), 0.5, {autoAlpha: 0, delay: 0.6});
+        //TweenMax.to($(".register-home"), 0.5, {autoAlpha: 0, delay: 0.6});
+        //break;
+        
+        case 3:
+        TweenMax.to($(".symbol-home"), 0.5, {autoAlpha: 0, delay: 0.5});
+        TweenMax.staggerFromTo($('.plans-col'),0.6,{y:'-100%'},{y:'0%',ease:Quad.easeOut},0.2);
+        TweenMax.staggerFromTo($('.plans-col .middle'),0.5,{autoAlpha:0},{autoAlpha:1,delay:0.8,ease:Quad.easeOut},0.2);
+        break;
+        
+        case 5:
+        $('.section-left').addClass("overflow");
+        TweenMax.to($(".symbol-home"), 0.5, {autoAlpha: 0});
+        TweenMax.to($(".register-home"), 0.5, {autoAlpha: 0, delay: 0.5});
+        break;
+      }
+    };
     function WheelScroll() {
-      $(window).on('mousewheel DOMMouseScroll', function (e) {
+      $(window).bind('mousewheel', function (e) {
+        clearTimeout($.data(this, 'timer'));
+        $.data(this, 'timer', setTimeout(function () {
+          isAnimating = false;
+        }, 1000));
+
+        e.preventDefault();
         var direction2;
         var direction2;
         var isAnimating = false
@@ -406,15 +440,15 @@ $(document).ready(function () {
         //StartTimer();
         //Start animate	
         clearInterval(slideTimer);
-				slideTimer= null;
-        if (direction2 === 1) {
+        slideTimer = null;
+        if ($('.section-group')[i] != null && direction2 === 1) {
           if (i >= secLength - 1) {
             i = 0;
           } else {
             i++;
           }
           bodSlideUp();
-        } else if (direction2 === -1) {
+        } else if ($('.section-group')[i] != null && direction2 === -1) {
           if (i <= 0) {
             i = secLength - 1;
           } else {
@@ -425,10 +459,24 @@ $(document).ready(function () {
       });
     };
     WheelScroll();
-    $('.menu__deskop li a').click(function (e) {
-      e.preventDefault();
 
+    $(".menu__deskop li a").click(function () {
+      var navIndex = $(this).parent().index();
+
+      //StartTimer();
+
+      if (isAnimating) {
+        return false;
+      } else if (!isAnimating && navIndex > i) {
+        i = navIndex;
+        bodSlideUp();
+      } else if (!isAnimating && navIndex < i) {
+        i = navIndex;
+        bodSlideDown();
+      };
+      return false;
     });
+
     //MouseScroll
 
 
