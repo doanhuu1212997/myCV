@@ -16,7 +16,7 @@ $(document).ready(function () {
       pos = { x: cursor_left_default, y: cursor_top_default },
       mouse = { x: cursor_left_default, y: cursor_top_default },
       page = { x: cursor_left_default, y: cursor_top_default };
-     
+
     let link__bigger = $('.link__bigger')
     $(window).mousemove(function (e) {
       // values: e.clientX, e.clientY, e.pageX, e.pageY
@@ -89,10 +89,16 @@ $(document).ready(function () {
 
     }
     isDeskop()
+    // nav menu
 
+
+
+
+
+    ///
     /// AL Project
     $carousel = $('.all__project');
-    titleAllProject=$('.all__project-title')
+    titleAllProject = $('.all__project-title')
     let skewMove = 15;
     $carousel.flickity({
       freeScroll: true,
@@ -100,11 +106,11 @@ $(document).ready(function () {
       prevNextButtons: false,
       pageDots: false
     });
-    $carousel.on('scroll.flickity', function(event, progress) {
-      progress = Math.max( 0, Math.min( 1, progress));
+    $carousel.on('scroll.flickity', function (event, progress) {
+      progress = Math.max(0, Math.min(1, progress));
       valueTranslateTitle = -progress * 100 + '%';
       valueProgressBarActive = progress * 100 + '%';
-      TweenMax.to(titleAllProject, 0.1, {left: valueTranslateTitle, ease: Power1.easeInOut});
+      TweenMax.to(titleAllProject, 0.1, { left: valueTranslateTitle, ease: Power1.easeInOut });
       // TweenMax.to(progressBarActive, 0.1, {width: valueProgressBarActive});
 
       // if(valueProgressBarActive !== '0%'){
@@ -112,7 +118,7 @@ $(document).ready(function () {
       // }else{
       //     TweenMax.to(progressBarAction, 0.1, {autoAlpha:1}); 
       // }
-  });
+    });
     $carousel.on('dragMove.flickity', function (e, pointer, moveVector) {
       // mouse.x = pointer.clientX;
       // mouse.y = pointer.clientY;
@@ -212,13 +218,43 @@ $(document).ready(function () {
         reset: true,
       })
     }
+    var secLength = $('.section-group').length,
+      i = $('.section-group').index(),
+      bodNameH2 = '',
+      isAnimating = false,
+      direction = 'down';
+    //start 
+    TweenMax.set($('.section-group').not($('.section-group')[i]), { y: '100%' });
+    //Reset position	
+    function bodReset() {
+      setTimeout(function () {
+        TweenMax.set($('.section-group').not($('.section-group')[i]), { y: '100%' });
+        isAnimating = false;
+      }, 1000);
+    };
+    function bodSlideUp() {
+
+      isAnimating = true;
+
+      TweenMax.set($('.section-group'), { zIndex: "" });
+      $(".menu__deskop li").removeClass("active");
+      $(".menu__deskop li").eq(i).addClass("active");
+      bodReset()
+      TweenMax.fromTo($('.section-group')[i], 1, { zIndex: 1 }, { y: '0%' })
+    };
+    //Slide Down
+    function bodSlideDown() {
+      isAnimating = true;
+
+      TweenMax.set($('.section-group'), { zIndex: "" });
+      $(".menu__deskop li").removeClass("active");
+      $(".menu__deskop li").eq(i).addClass("active");
+      bodReset()
+      TweenMax.fromTo($('.section-group')[i], 1, { y: '-100%', zIndex: 1 }, { y: '0%' });
+
+    };
 
     $(window).resize(function () {
-      // let heightW = $(window).height();
-      // let slide =$(".swiper-slide ");
-      // $(slide).css({
-      //   "height": heightW 
-      // });
       isDeskop()
     });
     /// backgroud intro hero
@@ -342,9 +378,22 @@ $(document).ready(function () {
       }
 
     );
-    //MouseScroll
+    	//AutoSlide
+	var slideTimer;
+	function StartTimer(){
+		slideTimer = setInterval(function(){ beginSlide(); }, 10000);
+		function beginSlide(){
+			if ( i >= i - 1 ){
+				i = 0 ;
+			}else{
+				i++;
+			}
+			bodSlideUp();
+		};
+	}
     function WheelScroll() {
       $(window).on('mousewheel DOMMouseScroll', function (e) {
+        var direction2;
         var direction2;
         var isAnimating = false
         if (isAnimating === false) direction2 = (function () {
@@ -352,24 +401,37 @@ $(document).ready(function () {
           var delta = Math.max(-1, Math.min(1, (e.originalEvent.wheelDelta || -e.originalEvent.detail)));
           return delta;
         }());
-        console.log(direction2);
+        console.log(direction2)
 
-
+        //StartTimer();
+        //Start animate	
+        clearInterval(slideTimer);
+				slideTimer= null;
+        if (direction2 === 1) {
+          if (i >= secLength - 1) {
+            i = 0;
+          } else {
+            i++;
+          }
+          bodSlideUp();
+        } else if (direction2 === -1) {
+          if (i <= 0) {
+            i = secLength - 1;
+          } else {
+            i--;
+          };
+          bodSlideDown();
+        };
       });
     };
     WheelScroll();
+    $('.menu__deskop li a').click(function (e) {
+      e.preventDefault();
 
-    ///
-    let isDown = false;
-    let startX;
-    let scrollLeft;
-    const slider = document.querySelector('.box');
-    const start = (e) => {
-      isDown = true;
-      slider.classList.add('active');
-      startX = e.pageX || e.touches[0].pageX - slider.offsetLeft;
-      scrollLeft = slider.scrollLeft;
-    }
+    });
+    //MouseScroll
+
+
   }
   intiSection()
 
