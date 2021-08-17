@@ -240,7 +240,8 @@ $(document).ready(function () {
       $(".menu__deskop li").removeClass("active");
       $(".menu__deskop li").eq(i).addClass("active");
 
-      TweenMax.fromTo($('.section-group')[i], 1, { zIndex: 1 }, { y: '0%', onComplete: bodReset() })
+      TweenMax.fromTo($('.section-group')[i], 1, { zIndex: 1 }, { y: '0%', ease: Quad.easeOut, onComplete: bodReset() })
+      CustomAnim()
     };
     //Slide Down
     function bodSlideDown() {
@@ -250,8 +251,8 @@ $(document).ready(function () {
       $(".menu__deskop li").removeClass("active");
       $(".menu__deskop li").eq(i).addClass("active");
 
-      TweenMax.fromTo($('.section-group')[i], 1, { y: '-100%', zIndex: 1 }, { y: '0%', onComplete: bodReset() });
-
+      TweenMax.fromTo($('.section-group')[i], 1, { y: '-100%', zIndex: 1 }, { y: '0%', ease: Quad.easeOut, onComplete: bodReset() });
+      CustomAnim()
     };
 
     $(window).resize(function () {
@@ -391,56 +392,45 @@ $(document).ready(function () {
         bodSlideUp();
       };
     }
-    function CustomAnim(){
-      switch(i){
+    function CustomAnim() {
+      switch (i) {
         case 0:
-        $('.section-left').addClass("overflow");
-        TweenMax.staggerFromTo($(".feliz-top, .feliz-middle, .feliz-bottom, .feliz-divider"),0.5,{autoAlpha:0},{autoAlpha:1,delay:0.5,ease:Quad.easeOut},0.2);
-        TweenMax.to($(".symbol-home"), 0.5, {autoAlpha: 0});
-        TweenMax.to($(".symbol-home div"), 0.5, {autoAlpha: 0});
-        TweenMax.to($(".register-home"), 0.5, {autoAlpha: 1, delay: 0.5});
-        break;
-        
-        //case 2:
-        //TweenMax.to($(".symbol-home"), 0.5, {autoAlpha: 0, delay: 0.6});
-        //TweenMax.to($(".register-home"), 0.5, {autoAlpha: 0, delay: 0.6});
-        //break;
-        
+          var wordIntro = $('.hero__text .splitting .word');
+          var tlCase = gsap.timeline();
+          tlCase.staggerFromTo(wordIntro, 1, { opacity: 0, rotationX: 90, transformOrigin: 'bottom', y: '60%' },
+            { opacity: 1, rotationX: 0, y: '0%', delay: 0.7 }, 0.1, '-=0.6')
+          // tlCase.reverse();
+          // setTimeout(function () {
+
+          //   tlCase.restart();
+          // }, 300);
+          break;
+        case 1:
+          break;
+        case 2:
+          break;
         case 3:
-        TweenMax.to($(".symbol-home"), 0.5, {autoAlpha: 0, delay: 0.5});
-        TweenMax.staggerFromTo($('.plans-col'),0.6,{y:'-100%'},{y:'0%',ease:Quad.easeOut},0.2);
-        TweenMax.staggerFromTo($('.plans-col .middle'),0.5,{autoAlpha:0},{autoAlpha:1,delay:0.8,ease:Quad.easeOut},0.2);
-        break;
-        
+          break;
         case 5:
-        $('.section-left').addClass("overflow");
-        TweenMax.to($(".symbol-home"), 0.5, {autoAlpha: 0});
-        TweenMax.to($(".register-home"), 0.5, {autoAlpha: 0, delay: 0.5});
-        break;
+          break;
       }
     };
     function WheelScroll() {
-      $(window).bind('mousewheel', function (e) {
+      $(window).on('mousewheel DOMMouseScroll', function (e) {
+        var direction2;
+        if (isAnimating === false) direction2 = (function () {
+          var delta = Math.max(-1, Math.min(1, (e.originalEvent.wheelDelta || -e.originalEvent.detail)));
+          return delta;
+        }());
         clearTimeout($.data(this, 'timer'));
         $.data(this, 'timer', setTimeout(function () {
           isAnimating = false;
         }, 1000));
+        
 
-        e.preventDefault();
-        var direction2;
-        var direction2;
-        var isAnimating = false
-        if (isAnimating === false) direction2 = (function () {
+   
 
-          var delta = Math.max(-1, Math.min(1, (e.originalEvent.wheelDelta || -e.originalEvent.detail)));
-          return delta;
-        }());
-        console.log(direction2)
 
-        //StartTimer();
-        //Start animate	
-        clearInterval(slideTimer);
-        slideTimer = null;
         if ($('.section-group')[i] != null && direction2 === 1) {
           if (i >= secLength - 1) {
             i = 0;
